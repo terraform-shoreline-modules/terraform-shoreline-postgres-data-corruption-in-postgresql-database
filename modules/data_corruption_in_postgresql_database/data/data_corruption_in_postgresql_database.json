@@ -1,0 +1,186 @@
+{
+  "name": "data_corruption_in_postgresql_database",
+  "description": "Data corruption in a PostgreSQL database refers to the loss, alteration, or invalidation of data stored in the database. This can occur due to various reasons like hardware or software failures, human errors, network issues, or malicious attacks. When data corruption occurs, it can cause several problems like data inconsistency, incorrect or incomplete data retrieval, system crashes, and even data loss. Recovering data from a corrupted PostgreSQL database requires specialized skills and tools. Preventing data corruption involves implementing measures like regular database backups, monitoring for system errors, and using robust data validation techniques.",
+  "params": [
+    {
+      "name": "VERSION",
+      "value": ""
+    },
+    {
+      "name": "TABLE_NAME",
+      "value": ""
+    },
+    {
+      "name": "DB_NAME",
+      "value": ""
+    },
+    {
+      "name": "DB_PASSWORD",
+      "value": ""
+    },
+    {
+      "name": "DB_USERNAME",
+      "value": ""
+    },
+    {
+      "name": "BACKUP_FILE",
+      "value": ""
+    },
+    {
+      "name": "SERVER_IP",
+      "value": ""
+    },
+    {
+      "name": "HOST_NAME",
+      "value": ""
+    },
+    {
+      "name": "K8S_CLUSTER_NAME",
+      "value": ""
+    },
+    {
+      "name": "NAMESPACE",
+      "value": ""
+    }
+  ],
+  "cells": [
+    {
+      "name": "cell_1",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Data Corruption in PostgreSQL Database.\nData corruption in a PostgreSQL database refers to the loss, alteration, or invalidation of data stored in the database. This can occur due to various reasons like hardware or software failures, human errors, network issues, or malicious attacks. When data corruption occurs, it can cause several problems like data inconsistency, incorrect or incomplete data retrieval, system crashes, and even data loss. Recovering data from a corrupted PostgreSQL database requires specialized skills and tools. Preventing data corruption involves implementing measures like regular database backups, monitoring for system errors, and using robust data validation techniques."
+    },
+    {
+      "name": "cell_2",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the PostgreSQL database for any corruption"
+    },
+    {
+      "name": "cell_3",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `pg_dumpall | grep ERROR`"
+    },
+    {
+      "name": "cell_4",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the status of PostgreSQL database"
+    },
+    {
+      "name": "cell_5",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `systemctl status postgresql`"
+    },
+    {
+      "name": "cell_6",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the PostgreSQL logs for any error messages"
+    },
+    {
+      "name": "cell_7",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `tail -n 100 /var/log/postgresql/postgresql-${VERSION}.log`"
+    },
+    {
+      "name": "cell_8",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the integrity of the PostgreSQL database cluster"
+    },
+    {
+      "name": "cell_9",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `pg_verify_checksums -D /var/lib/postgresql/${VERSION}/main/`"
+    },
+    {
+      "name": "cell_10",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the memory usage on the server"
+    },
+    {
+      "name": "cell_11",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `free -h`"
+    },
+    {
+      "name": "cell_12",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the CPU usage on the server"
+    },
+    {
+      "name": "cell_13",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `top`"
+    },
+    {
+      "name": "cell_14",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the Disk Usage on the server"
+    },
+    {
+      "name": "cell_15",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `df -h`"
+    },
+    {
+      "name": "cell_16",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the network connectivity to the server"
+    },
+    {
+      "name": "cell_17",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `ping ${SERVER_IP}`"
+    },
+    {
+      "name": "cell_18",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the PostgreSQL configuration settings"
+    },
+    {
+      "name": "cell_19",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `cat /etc/postgresql/${VERSION}/main/postgresql.conf`"
+    },
+    {
+      "name": "cell_20",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Restore data from a backup: If you have a recent backup of the database, you can restore the data from it. However, this may cause some data loss if the backup was not taken right before the corruption occurred."
+    },
+    {
+      "name": "cell_21",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "host | host_name=$HOST_NAME | invoke_restore_database($DB_NAME, $DB_PASSWORD, $DB_USERNAME, $BACKUP_FILE)"
+    },
+    {
+      "name": "cell_22",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Repair corrupted tables: If only a few tables in the database are corrupted, you can try to repair them using the PostgreSQL tool called pg_resetxlog or pg_resetwal."
+    },
+    {
+      "name": "cell_23",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "host | host_name=$HOST_NAME | invoke_reset_table($VERSION, $TABLE_NAME, $DB_NAME)"
+    }
+  ]
+}
