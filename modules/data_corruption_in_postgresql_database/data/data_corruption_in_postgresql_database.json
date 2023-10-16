@@ -3,7 +3,7 @@
   "description": "Data corruption in a PostgreSQL database refers to the loss, alteration, or invalidation of data stored in the database. This can occur due to various reasons like hardware or software failures, human errors, network issues, or malicious attacks. When data corruption occurs, it can cause several problems like data inconsistency, incorrect or incomplete data retrieval, system crashes, and even data loss. Recovering data from a corrupted PostgreSQL database requires specialized skills and tools. Preventing data corruption involves implementing measures like regular database backups, monitoring for system errors, and using robust data validation techniques.",
   "params": [
     {
-      "name": "VERSION",
+      "name": "BACKUP_FILE",
       "value": ""
     },
     {
@@ -11,11 +11,11 @@
       "value": ""
     },
     {
-      "name": "DB_NAME",
+      "name": "SERVER_IP",
       "value": ""
     },
     {
-      "name": "DB_PASSWORD",
+      "name": "VERSION",
       "value": ""
     },
     {
@@ -23,11 +23,11 @@
       "value": ""
     },
     {
-      "name": "BACKUP_FILE",
+      "name": "DB_PASSWORD",
       "value": ""
     },
     {
-      "name": "SERVER_IP",
+      "name": "DB_NAME",
       "value": ""
     },
     {
@@ -168,7 +168,7 @@
       "name": "cell_21",
       "type": "OP_LANG",
       "enabled": true,
-      "content": "host | host_name=$HOST_NAME | invoke_restore_database($DB_NAME, $DB_PASSWORD, $DB_USERNAME, $BACKUP_FILE)"
+      "content": "host | host_name=$HOST_NAME | invoke_restore_postgresql_database($BACKUP_FILE, $DB_USERNAME, $DB_PASSWORD, $DB_NAME)"
     },
     {
       "name": "cell_22",
@@ -180,7 +180,7 @@
       "name": "cell_23",
       "type": "OP_LANG",
       "enabled": true,
-      "content": "host | host_name=$HOST_NAME | invoke_reset_table($VERSION, $TABLE_NAME, $DB_NAME)"
+      "content": "host | host_name=$HOST_NAME | invoke_repair_db_table($TABLE_NAME, $VERSION, $DB_NAME)"
     }
   ]
 }
